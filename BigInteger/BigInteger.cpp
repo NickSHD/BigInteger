@@ -52,6 +52,14 @@ std::string BigInteger::BASE_to_string(ui n, bool f) const {
 	return s;
 }
 
+ui BigInteger::getEmptyCell() const
+{
+	if (sign) {
+		return (ui)(kBase - 1);
+	}
+	return 0;
+}
+
 std::string BigInteger::to_string() const {
 	std::string s = "";
 	for (int i = 0; i < (int)data.size(); ++i) {
@@ -103,6 +111,31 @@ BigInteger &BigInteger::operator=(BigInteger const &other) {
 	data = other.data;
 	sign = other.sign;
 	return *this;
+}
+
+bool operator<(BigInteger const &a, BigInteger const &b) {
+	if (a.sign != b.sign) {
+		return a.sign;
+	}
+	if (a.data.size() != b.data.size()) {
+		return a.data.size() < b.data.size();
+	}
+	for (size_t i = a.data.size(); i > 0; --i) {
+		if (a.data[i - 1] != b.data[i - 1]) {
+			return a.data[i - 1] < b.data[i - 1];
+		}
+	}
+	return false;
+}
+
+bool operator>(BigInteger const &a, BigInteger const &b) {
+	return b < a;
+}
+bool operator<=(BigInteger const &a, BigInteger const &b) {
+	return !(b < a);
+}
+bool operator>=(BigInteger const &a, BigInteger const &b) {
+	return !(a < b);
 }
 
 bool BigInteger::operator<(const BigInteger &right) const {
@@ -201,19 +234,19 @@ BigInteger& BigInteger::operator+=(BigInteger const &rhs) {
 }
 
 BigInteger &BigInteger::operator-=(BigInteger const &rhs) {
-	if (check(*this, rhs) == 0) {
+	if (*this == rhs) {
 		data.resize(0);
 		data.push_back(0);
 		sign = false;
 		return *this;
 	}
 	if (sign != rhs.sign) {
-return *this += -rhs;
+		return *this += -rhs;
 	}
 	size_t len = std::max(data.size(), rhs.data.size());
 	size_t oldSize = data.size();
 	data.resize(len);
-	if (check_modules(*this, rhs) < 0) {
+	if (*this < rhs) {
 		return *this = -(rhs - *this);
 	}
 	unsigned long long c = 0;
@@ -363,7 +396,7 @@ BigInteger &BigInteger::operator%=(BigInteger const &rhs) {
 	myDiv(*this, b, res, cur);
 	return cur;
 }
-/*
+
 BigInteger &BigInteger::apply_bit_operation(BigInteger const &rhs, const std::function<ui(ui, ui)> func) {
 	size_t len = std::max(data.size(), rhs.data.size());
 	ui emptyCell = getEmptyCell();
@@ -376,7 +409,7 @@ BigInteger &BigInteger::apply_bit_operation(BigInteger const &rhs, const std::fu
 		data[i] = func(i < data.size() ? data[i] : this->getEmptyCell(),
 		i < rhs.data.size() ? rhs.data[i] : rhs.getEmptyCell());
 	}
-	relax();
+	make_right();
 	return *this;
 }
 
@@ -409,7 +442,7 @@ void BigInteger::shiftCells(int rhs) {
 		for (size_t i = data.size(); i > data.size() + rhs; --i) {
 			data[i - 1] = getEmptyCell();
 		}
-		relax();
+		make_right();
 	}
 }
 
@@ -431,7 +464,7 @@ BigInteger &BigInteger::operator<<=(int rhs) {
 			data[i - 1] <<= auxShift;
 		}
 	}
-	relax();
+	make_right();
 	return *this;
 }
 
@@ -454,10 +487,9 @@ BigInteger &BigInteger::operator>>=(int rhs) {
 		}
 		data.back() += cur << (kLogBase - auxShift);
 	}
-	relax();
+	make_right();
 	return *this;
 }
-*/
 
 BigInteger BigInteger::operator+() const {
 	return *this;
@@ -519,7 +551,6 @@ BigInteger operator%(BigInteger a, BigInteger const &b) {
 	return a %= b;
 }
 
-/*
 BigInteger operator&(BigInteger a, BigInteger const &b) {
 	return a &= b;
 }
@@ -547,43 +578,16 @@ bool operator==(BigInteger const &a, BigInteger const &b) {
 bool operator!=(BigInteger const &a, BigInteger const &b) {
 	return !(a.data == b.data);
 }
-*/
-/*
-bool operator<(BigInteger const &a, BigInteger const &b) {
-	if (a.sign != b.sign) {
-		return a.sign;
-	}
-	if (a.data.size() != b.data.size()) {
-		return a.data.size() < b.data.size();
-	}
-	for (size_t i = a.data.size(); i > 0; --i) {
-		if (a.data[i - 1] != b.data[i - 1]) {
-			return a.data[i - 1] < b.data[i - 1];
-		}
-	}
-	return false;
-}
 
-bool operator>(BigInteger const &a, BigInteger const &b) {
-	return b < a;
-}
-bool operator<=(BigInteger const &a, BigInteger const &b) {
-	return !(b < a);
-}
-bool operator>=(BigInteger const &a, BigInteger const &b) {
-	return !(a < b);
-}
+
 
 std::string to_string(BigInteger const &a) {
 	return a.to_string();
 }
 
-
-
 std::ostream &operator<<(std::ostream &s, BigInteger const &a) {
 	return s << a.to_string();
 }
-
 
 std::istream &operator>>(std::istream &s, BigInteger &a) {
 	std::string aux;
@@ -591,4 +595,4 @@ std::istream &operator>>(std::istream &s, BigInteger &a) {
 	a = BigInteger(aux);
 	return s;
 }
-*/
+
