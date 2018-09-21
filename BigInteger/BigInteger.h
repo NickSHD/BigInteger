@@ -24,11 +24,12 @@ public:
 
 
 	BigInteger &operator=(BigInteger const &other);
-	//BigInteger &operator*=(ui const &rhs);
-	//BigInteger &operator-=(BigInteger const &rhs);
-	//BigInteger &operator*=(BigInteger const &rhs);
-	//BigInteger &operator/=(BigInteger const &rhs);
-	//BigInteger &operator%=(BigInteger const &rhs);
+	BigInteger &operator*=(ui const &rhs);
+	BigInteger &operator-=(BigInteger const &rhs);
+	BigInteger &operator+=(BigInteger const &rhs);
+	BigInteger &operator*=(BigInteger const &rhs);
+	BigInteger &operator/=(BigInteger const &rhs);
+	BigInteger &operator%=(BigInteger const &rhs);
 	//BigInteger &apply_bit_operation(BigInteger const &rhs, const std::function<ui(ui, ui)> func);
 	//BigInteger &operator&=(BigInteger const &rhs);
 	//BigInteger &operator|=(BigInteger const &rhs);
@@ -37,11 +38,11 @@ public:
 	//BigInteger &operator>>=(int rhs);
 	BigInteger operator+() const;
 	BigInteger operator-() const;
-	//BigInteger operator~() const;
-	//BigInteger &operator++();
-	//const BigInteger operator++(int);
-	//BigInteger &operator--();
-	//const BigInteger operator--(int);
+	BigInteger operator~() const;
+	BigInteger &operator++();
+	const BigInteger operator++(int);
+	BigInteger &operator--();
+	const BigInteger operator--(int);
 
 	bool operator==(BigInteger const &right) const;
 	bool operator!=(BigInteger const &right) const;
@@ -51,9 +52,9 @@ public:
 	bool operator>=(BigInteger const &right) const;
 
 	std::string to_string() const;
-	//friend std::pair<BigInteger, ui> sDiv(BigInteger const &a, ui const &b);
+	friend std::pair<BigInteger, ui> sDiv(BigInteger const &a, ui const &b);
+	friend void myDiv(BigInteger const &a, BigInteger &b, BigInteger &res, BigInteger &cur);
 	//friend BigInteger operator*(BigInteger const &a, ui const &b);
-	//friend ui getTrial(ui const &a, ui const &b, ui const &c);
 
 private:
 	const int BASE_Degree[10] = { 1, 10, 100, 1000, 10000, 100000, 1000000, 10000000, 100000000, 1000000000 };
@@ -65,11 +66,11 @@ private:
 	static const ui maxNumber;
 };
 
-//BigInteger operator+(BigInteger a, BigInteger const &b);
-//BigInteger operator-(BigInteger a, BigInteger const &b);
-//BigInteger operator*(BigInteger a, BigInteger const &b);
-//BigInteger operator/(BigInteger a, BigInteger const &b);
-//BigInteger operator%(BigInteger a, BigInteger const &b);
+BigInteger operator+(BigInteger a, BigInteger const &b);
+BigInteger operator-(BigInteger a, BigInteger const &b);
+BigInteger operator*(BigInteger a, BigInteger const &b);
+BigInteger operator/(BigInteger a, BigInteger const &b);
+BigInteger operator%(BigInteger a, BigInteger const &b);
 //BigInteger operator&(BigInteger a, BigInteger const &b);
 //BigInteger operator|(BigInteger a, BigInteger const &b);
 //BigInteger operator^(BigInteger a, BigInteger const &b);
@@ -83,13 +84,9 @@ private:
 //bool operator<=(BigInteger const &a, BigInteger const &b);
 //bool operator>=(BigInteger const &a, BigInteger const &b);
 
-int check(BigInteger const &a, BigInteger const &b);
-int check_modules(BigInteger const &a, BigInteger const &b);
-std::string to_string(BigInteger const &a);
-std::ostream &operator<<(std::ostream &s, BigInteger const &a);
-std::istream &operator>>(std::istream &s, BigInteger &a);
-//std::pair<BigInteger, ui> myDiv(BigInteger const &a, ui const &b);
+//std::string to_string(BigInteger const &a);
+//std::ostream &operator<<(std::ostream &s, BigInteger const &a);
+//std::istream &operator>>(std::istream &s, BigInteger &a);
+//std::pair<BigInteger, ui> sDiv(BigInteger const &a, ui const &b);
+void myDiv(BigInteger const &a, BigInteger &b, BigInteger &res, BigInteger &cur);
 //BigInteger operator*(BigInteger const &a, ui const &b);
-//ui getTrial(ui const &a, ui const &b, ui const &c);
-
-
