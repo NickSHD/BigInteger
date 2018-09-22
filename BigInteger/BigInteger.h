@@ -18,8 +18,7 @@ public:
 	BigInteger();
 	BigInteger(BigInteger const &other);
 	BigInteger(std::vector<ui> const &obj, bool _sign);
-	BigInteger(int a);
-	//BigInteger(ui a);
+	BigInteger(ui a);
 	explicit BigInteger(std::string const &str);
 	//~BigInteger();
 
@@ -78,16 +77,20 @@ BigInteger operator^(BigInteger a, BigInteger const &b);
 BigInteger operator<<(BigInteger a, int b);
 BigInteger operator>>(BigInteger a, int b);
 
-bool operator==(BigInteger const &a, BigInteger const &b);
-bool operator!=(BigInteger const &a, BigInteger const &b);
-bool operator<(BigInteger const &a, BigInteger const &b);
-bool operator>(BigInteger const &a, BigInteger const &b);
-bool operator<=(BigInteger const &a, BigInteger const &b);
-bool operator>=(BigInteger const &a, BigInteger const &b);
+/*
 
-//std::string to_string(BigInteger const &a);
-//std::ostream &operator<<(std::ostream &s, BigInteger const &a);
-//std::istream &operator>>(std::istream &s, BigInteger &a);
+bool operator==(BigInteger &a, BigInteger const &b);
+bool operator!=(BigInteger &a, BigInteger const &b);
+bool operator<(BigInteger  &a, BigInteger const &b);
+bool operator>(BigInteger  &a, BigInteger const &b);
+bool operator<=(BigInteger &a, BigInteger const &b);
+bool operator>=(BigInteger &a, BigInteger const &b);
+
+*/
+
+std::string to_string(BigInteger const &a);
+std::ostream &operator<<(std::ostream &s, BigInteger const &a);
+std::istream &operator>>(std::istream &s, BigInteger &a);
 std::pair<BigInteger, ui> sDiv(BigInteger const &a, ui const &b);
 void myDiv(BigInteger const &a, BigInteger &b, BigInteger &res, BigInteger &cur);
 //BigInteger operator*(BigInteger const &a, ui const &b);
