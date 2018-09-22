@@ -17,15 +17,13 @@ BigInteger::BigInteger(BigInteger const &other) {
 	data = other.data;
 }
 
-BigInteger::BigInteger(int a) {
+BigInteger::BigInteger(ui a) {
 	sign = false;
 	if (a == 0) {
 		data.push_back(0);
-	} else if (a > 0) {
+	}
+	else if (a > 0) {
 		data.push_back((unsigned)a);
-	} else {
-		data.push_back((unsigned)(-a));
-		sign = true;
 	}
 }
 
@@ -73,7 +71,8 @@ std::string BigInteger::to_string() const {
 	}
 	if (s.empty()) {
 		return "0";
-	} else {
+	}
+	else {
 		return s;
 	}
 }
@@ -86,7 +85,8 @@ BigInteger::BigInteger(std::string const &str) {
 	if (s[0] == '-') {
 		sign = true;
 		s.erase(s.begin());
-	} else {
+	}
+	else {
 		sign = false;
 	}
 	while (s.length() % 9 != 0) {
@@ -113,40 +113,17 @@ BigInteger &BigInteger::operator=(BigInteger const &other) {
 	return *this;
 }
 
-bool operator<(BigInteger const &a, BigInteger const &b) {
-	if (a.sign != b.sign) {
-		return a.sign;
-	}
-	if (a.data.size() != b.data.size()) {
-		return a.data.size() < b.data.size();
-	}
-	for (size_t i = a.data.size(); i > 0; --i) {
-		if (a.data[i - 1] != b.data[i - 1]) {
-			return a.data[i - 1] < b.data[i - 1];
-		}
-	}
-	return false;
-}
-
-bool operator>(BigInteger const &a, BigInteger const &b) {
-	return b < a;
-}
-bool operator<=(BigInteger const &a, BigInteger const &b) {
-	return !(b < a);
-}
-bool operator>=(BigInteger const &a, BigInteger const &b) {
-	return !(a < b);
-}
-
 bool BigInteger::operator<(const BigInteger &right) const {
 	if (this->sign) {
 		if (right.sign) return ((-right) < (-*(this)));
 		else return true;
-	} else if (right.sign) return false;
+	}
+	else if (right.sign) return false;
 	else {
 		if ((int)this->data.size() != (int)right.data.size()) {
 			return (int)this->data.size() < (int)right.data.size();
-		} else {
+		}
+		else {
 			for (int i = (int)this->data.size() - 1; i >= 0; --i) {
 				if (this->data[i] != right.data[i]) return this->data[i] < right.data[i];
 			}
@@ -205,11 +182,6 @@ BigInteger& BigInteger::operator*=(ui const &b) {
 	return *this;
 }
 
-BigInteger BigInteger::operator~() const {
-	const BigInteger tmp_big(1);
-	return -*this - tmp_big;
-}
-
 BigInteger& BigInteger::operator+=(BigInteger const &rhs) {
 	if (sign != rhs.sign) {
 		if (sign) {
@@ -253,7 +225,8 @@ BigInteger &BigInteger::operator-=(BigInteger const &rhs) {
 	for (size_t i = 0; i < len; ++i) {
 		if (data[i] > rhs.data[i]) {
 			data[i] -= rhs.data[i];
-		} else {
+		}
+		else {
 			size_t p = i + 1;
 			while (data[p] == 0) {
 				data[p++] += kBase - 1;
@@ -321,7 +294,7 @@ void myDiv(BigInteger const &a, BigInteger &b, BigInteger &res, BigInteger &cur)
 		b *= scale;
 	}
 	ull uJ, vJ, i;            //vJ - тек сдвиг B относ U(при вычитании), инд очередной цифры частного
-	ull temp1, temp2, temp;   //uJ - тек цифра U
+	ull temp1, temp2, temp = 0;   //uJ - тек цифра U
 	ui qGuess, r;             //догадка для частного и остаток
 	ui borrow, carry; //переносы
 	for (vJ = m, uJ = n + vJ; vJ >= 0; --vJ, --uJ) {
@@ -333,7 +306,8 @@ void myDiv(BigInteger const &a, BigInteger &b, BigInteger &res, BigInteger &cur)
 			if ((temp2 > temp1) || (qGuess == BigInteger::kBase)) {
 				--qGuess;                 //не работает, qGuess уменьшим
 				r += b.data[n - 1];       //новый остаток
-			} else break;     //qGuess правильное или на единицу больше
+			}
+			else break;     //qGuess правильное или на единицу больше
 		}
 		//U - B * qGuess начиная с vJ+i позиции
 		carry = 0, borrow = 0;
@@ -346,7 +320,8 @@ void myDiv(BigInteger const &a, BigInteger &b, BigInteger &res, BigInteger &cur)
 			if (temp2 < 0) {
 				uShift[i] = temp2 + BigInteger::kBase;
 				borrow = -1;
-			} else {
+			}
+			else {
 				uShift[i] = temp2;
 				borrow = 0;
 			}
@@ -355,7 +330,8 @@ void myDiv(BigInteger const &a, BigInteger &b, BigInteger &res, BigInteger &cur)
 		if (temp2 < 0) {
 			uShift[i] = temp2 + BigInteger::kBase;
 			borrow = -1;
-		} else {
+		}
+		else {
 			uShift[i] = temp2;
 			borrow = 0;
 		}
@@ -364,10 +340,12 @@ void myDiv(BigInteger const &a, BigInteger &b, BigInteger &res, BigInteger &cur)
 			res.data[vJ] = qGuess - 1;
 			carry = 0;
 			for (i = 0; i < n; ++i) {
+				temp = uShift[i] + b.data[i] + carry;
 				if (temp >= BigInteger::kBase) {
 					uShift[i] = temp - BigInteger::kBase;
 					carry = 1;
-				} else {
+				}
+				else {
 					uShift[i] = temp;
 					carry = 0;
 				}
@@ -382,7 +360,8 @@ void myDiv(BigInteger const &a, BigInteger &b, BigInteger &res, BigInteger &cur)
 		b = p.first;
 		p = sDiv(u, scale);
 		cur = p.first;
-	} else cur = u;
+	}
+	else cur = u;
 }
 
 BigInteger &BigInteger::operator/=(BigInteger const &rhs) {
@@ -407,7 +386,7 @@ BigInteger &BigInteger::apply_bit_operation(BigInteger const &rhs, const std::fu
 	}
 	for (size_t i = 0; i < len; ++i) {
 		data[i] = func(i < data.size() ? data[i] : this->getEmptyCell(),
-		i < rhs.data.size() ? rhs.data[i] : rhs.getEmptyCell());
+			i < rhs.data.size() ? rhs.data[i] : rhs.getEmptyCell());
 	}
 	make_right();
 	return *this;
@@ -435,7 +414,8 @@ void BigInteger::shiftCells(int rhs) {
 		for (auto i = (size_t)rhs; i > 0; --i) {
 			data[i - 1] = 0;
 		}
-	} else {
+	}
+	else {
 		for (auto i = (size_t)-rhs; i < data.size(); ++i) {
 			data[i + rhs] = data[i];
 		}
@@ -489,14 +469,6 @@ BigInteger &BigInteger::operator>>=(int rhs) {
 	}
 	make_right();
 	return *this;
-}
-
-BigInteger BigInteger::operator+() const {
-	return *this;
-}
-
-BigInteger BigInteger::operator-() const {
-	return ~*this + 1;
 }
 
 BigInteger BigInteger::operator~() const {
@@ -571,15 +543,6 @@ BigInteger operator>>(BigInteger a, int b) {
 	return a >>= b;
 }
 
-bool operator==(BigInteger const &a, BigInteger const &b) {
-	return a.data == b.data;
-}
-
-bool operator!=(BigInteger const &a, BigInteger const &b) {
-	return !(a.data == b.data);
-}
-
-
 
 std::string to_string(BigInteger const &a) {
 	return a.to_string();
@@ -596,3 +559,10 @@ std::istream &operator>>(std::istream &s, BigInteger &a) {
 	return s;
 }
 
+bool operator==(BigInteger& a, const BigInteger& b) {
+	return (a == b);
+}
+
+bool operator<=(BigInteger& a, const BigInteger& b) {
+	return (a <= b);
+}
